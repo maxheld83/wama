@@ -4,7 +4,7 @@ foo <- function() TRUE
 
 #' Placeholder app for testing
 #' @export
-wama_app <- function() {
+hello_world_app <- function() {
   shiny::shinyApp(
     # change string here to see updates live preview
     ui = shiny::fluidPage("Hello, world!"),
