@@ -1,0 +1,6 @@
+authors:
+  Maximilian Held:
+    href: https://www.maxheld.de
+template:
+  params:
+    bootswatch: cosmo

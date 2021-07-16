@@ -2,3 +2,10 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^\.radian_history$
+^codecov\.yml$
+^pkgdown/_pkgdown\.yml$
+^docs$
+^pkgdown$
+Dockerfile
+.dockerignore
+^\.github$
