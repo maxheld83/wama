@@ -1,7 +1,7 @@
 # wama
 
 <!-- badges: start -->
-[![Main](https://github.com/maxheld83/wama/workflows/.github/workflows/main.yaml/badge.svg)](https://github.com/maxheld83/wama/actions)
+[![.github/workflows/main.yaml](https://github.com/maxheld83/wama/actions/workflows/main.yaml/badge.svg)](https://github.com/maxheld83/wama/actions/workflows/main.yaml)
 [![Codecov test coverage](https://codecov.io/gh/maxheld83/wama/branch/master/graph/badge.svg)](https://codecov.io/gh/maxheld83/wama?branch=master)
 [![CRAN status](https://www.r-pkg.org/badges/version/biblids)](https://CRAN.R-project.org/package=biblids)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
