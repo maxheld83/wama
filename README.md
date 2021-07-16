@@ -28,6 +28,8 @@ For rapid iterations, especially on shiny apps or when polishing the documentati
 
 wama watches relevant files and folders for changes, and then automatically triggers these jobs in the background.
 
+## Notes
+
 Important to note:
 
 - wama always runs in the *background*, that is *non-interactively*.
@@ -36,3 +38,13 @@ Important to note:
 - wama is strictly a development-time package; you should never need it in your `DESCRIPTION`.
 - wama may be most helpful in an editor or IDE paired with a large screen, where you can view many terminals at once.
     For example [vscode](http://code.visualstudio.com), has great support for multiple terminals, website preview and [R](https://marketplace.visualstudio.com/items?itemName=Ikuyadeu.r)
+
+
+## Related Work
+
+- [`option(shiny.autoreload = TRUE)`](https://shiny.rstudio.com/reference/shiny/0.14/shiny-options.html) is a native shiny feature to automatically reload a shiny app during development when relevant files are changed.
+    However, it doesn't work with shiny apps in packages, or which rely on changes in packages under development.
+- [`testthat::auto_test()`](https://testthat.r-lib.org/reference/auto_test.html) watches source and test files and reruns relevant tests.
+    However, it seems to be [retired](https://github.com/r-lib/testthat/issues/922#issuecomment-520580955).
+
+And I'm really hoping I didn't miss something and am uselessy reinventing the wheel here ... 😬.
