@@ -1,7 +1,3 @@
-#' Placeholder function
-#' @export
-foo <- function() TRUE
-
 #' Placeholder app for testing
 #' @export
 hello_world_app <- function() {

@@ -1,7 +1,3 @@
-test_that("placeholder works", {
-  expect_true(foo())
-})
-
 library(shinytest)
 test_that("hello_world_app() works", {
   skip_on_cran()
