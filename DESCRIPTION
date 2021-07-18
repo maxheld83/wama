@@ -26,8 +26,8 @@ BugReports: https://github.com/maxheld83/wama/issues
 Imports:
     callr (>= 3.7.0),
     shiny (>= 1.6.0),
-    rlang (>= 0.4.8),
-    shinytest (>= 1.5.0)
+    rlang (>= 0.4.8)
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    shinytest (>= 1.5.0)
 Config/testthat/edition: 3
