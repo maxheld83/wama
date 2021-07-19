@@ -19,7 +19,7 @@ jobs:
         with:
           # only cache the user library
           path: ".github/library"
-          key: ${{ job.container.image }}-${{ hashFiles('DESCRIPTION') }}
+          key: ${{ job.container.image }}-${{ hashFiles('DESCRIPTION') }}-1
       - name: Install System Dependencies
         run: muggle::install_sysdeps()
       - name: Install R Dependencies
