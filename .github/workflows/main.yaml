@@ -28,7 +28,11 @@ jobs:
           R_LIBS_SITE: $R_LIBS_RUNTIME_GH
         run: remotes::install_deps(dependencies = TRUE)
       - name: Check
-        run: devtools::check(document = FALSE)
+        # shinytest install deps should be unnecessary
+        # but isn't https://github.com/subugoe/muggle/issues/205
+        run: |
+          shinytest::installDependencies()
+          devtools::check(document = FALSE)
       - name: Test Coverage
         run: covr::codecov()
       - name: Build Package Website
