@@ -1,10 +1,18 @@
 #' Placeholder app for testing
 #' @export
-hello_world_app <- function() {
+greeting_app <- function() {
   shiny::shinyApp(
-    # change string here to see updates live preview
-    ui = shiny::fluidPage("Hello, world!"),
-    # change string here to see updates shiny backend console
-    server = function(input, output, session) print("Hello, server!")
+    ui = shiny::fluidPage(
+      shiny::textInput("name", "What's your name"),
+      shiny::textOutput("greeting"),
+      shiny::actionButton("reset", "Reset")
+    ),
+    server = function(input, output, session) {
+      output$greeting <- shiny::renderText({
+        shiny::req(input$name)
+        paste0("Hi ", input$name)
+      })
+      shiny::observeEvent(input$reset, shiny::updateTextInput(session, "name", value = ""))
+    }
   )
 }

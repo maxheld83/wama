@@ -1,6 +1,9 @@
 library(shinytest)
-test_that("hello_world_app() works", {
-  skip_on_cran()
-  # images cannot be compared across platforms
-  expect_pass(testApp(test_path("apps/hello_world"), compareImages = FALSE))
+test_that("greeting_app() works", {
+  app <- shinytest::ShinyDriver$new(greeting_app())
+  app$setInputs(name = "Max")
+  expect_equal(app$getValue("greeting"), "Hi Max")
+
+  app$click("reset")
+  expect_equal(app$getValue("greeting"), "")
 })
