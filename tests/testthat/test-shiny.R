@@ -2,5 +2,5 @@ library(shinytest)
 test_that("hello_world_app() works", {
   skip_on_cran()
   # images cannot be compared across platforms
-  expect_pass(testApp("apps/hello_world", compareImages = FALSE))
+  expect_pass(testApp(test_path("apps/hello_world"), compareImages = FALSE))
 })
