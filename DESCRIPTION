@@ -29,5 +29,6 @@ Imports:
     rlang (>= 0.4.8)
 Suggests: 
     testthat (>= 3.0.0),
-    shinytest (>= 1.5.0)
+    shinytest (>= 1.5.0),
+    globals (>= 0.14.0)
 Config/testthat/edition: 3
