@@ -1,5 +1,5 @@
 Package: wama
-Title: Automating loading workflows during local development
+Title: Automating loading workflows during interactive development
 Version: 0.0.0.9000
 Depends: R (>= 4.0.0)
 Authors@R: 
@@ -26,7 +26,10 @@ BugReports: https://github.com/maxheld83/wama/issues
 Imports:
     callr (>= 3.7.0),
     shiny (>= 1.6.0),
-    rlang (>= 0.4.8)
+    rlang (>= 0.4.8),
+    cli (>= 3.0.0),
+    fs (>= 1.5.0),
+    pkgload (>= 1.2.1)
 Suggests: 
     testthat (>= 3.0.0),
     shinytest (>= 1.5.0),
