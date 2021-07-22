@@ -2,7 +2,7 @@
 #' @inheritParams shiny::runApp
 #' @inheritDotParams shiny::runApp
 #' @export
-run_app_auto <- function(port = 1818,
+run_app_auto <- function(port = 8181,
                          host = getOption("shiny.host", "127.0.0.1"),
                         ...) {
   cli::cli_alert_info("Auto-updating enabled")

@@ -4,7 +4,7 @@
 \alias{run_app_auto}
 \title{Refresh shiny app automatically}
 \usage{
-run_app_auto(port = 1818, host = getOption("shiny.host", "127.0.0.1"), ...)
+run_app_auto(port = 8181, host = getOption("shiny.host", "127.0.0.1"), ...)
 }
 \arguments{
 \item{port}{The TCP port that the application should listen on. If the
