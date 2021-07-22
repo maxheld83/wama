@@ -4,13 +4,17 @@
 \alias{run_app_auto}
 \title{Refresh shiny app automatically}
 \usage{
-run_app_auto(port = 1818, ...)
+run_app_auto(port = 1818, host = getOption("shiny.host", "127.0.0.1"), ...)
 }
 \arguments{
 \item{port}{The TCP port that the application should listen on. If the
 \code{port} is not specified, and the \code{shiny.port} option is set (with
 \code{options(shiny.port = XX)}), then that port will be used. Otherwise,
 use a random port.}
+
+\item{host}{The IPv4 address that the application should listen on. Defaults
+to the \code{shiny.host} option, if set, or \code{"127.0.0.1"} if not. See
+Details.}
 
 \item{...}{
   Arguments passed on to \code{\link[shiny:runApp]{shiny::runApp}}
@@ -29,9 +33,6 @@ expression that produces a Shiny app object.
 launched automatically after the app is started. Defaults to true in
 interactive sessions only. This value of this parameter can also be a
 function to call with the application's URL.}
-    \item{\code{host}}{The IPv4 address that the application should listen on. Defaults
-to the \code{shiny.host} option, if set, or \code{"127.0.0.1"} if not. See
-Details.}
     \item{\code{workerId}}{Can generally be ignored. Exists to help some editions of
 Shiny Server Pro route requests to the correct process.}
     \item{\code{quiet}}{Should Shiny status messages be shown? Defaults to FALSE.}

@@ -2,16 +2,15 @@
 #' @inheritParams shiny::runApp
 #' @inheritDotParams shiny::runApp
 #' @export
-run_app_auto <- function(port = 1818, ...) {
+run_app_auto <- function(port = 1818,
+                         host = getOption("shiny.host", "127.0.0.1"),
+                        ...) {
   cli::cli_alert_info("Auto-updating enabled")
   sb <- cli::cli_status("{cli::symbol$arrow_right} Launching auto-updating")
-  rp <- run_app_dev_bg(port = port, ...)
-  # needs time to be ready
-  # hack-fix until https://github.com/maxheld83/wama/issues/7
-  Sys.sleep(2)
-  # browse URL from within background processes does not work
-  suppressMessages(browse_url2(url = paste0("http://localhost:", port)))
+  rp <- run_app_dev_bg(port = port, host = host, ...)
   on.exit(rp$kill(), add = TRUE)
+  # browse URL from within background processes does not work
+  browse_when_ready(host = host, port = port)
   testthat::watch(
     path = fs::dir_ls(recurse = TRUE),
     callback = function(added, deleted, modified) {
@@ -19,9 +18,9 @@ run_app_auto <- function(port = 1818, ...) {
         id = sb,
         "{cli::symbol$arrow_right} Update triggered"
       )
+      # browse URL from within background processes does not work
       rp <<- run_app_dev_bg(rp = rp, port = port, ...)
-      Sys.sleep(2)
-      suppressMessages(browse_url2(url = paste0("http://localhost:", port)))
+      browse_when_ready(host = host, port = port)
       TRUE
     },
     hash = TRUE
@@ -38,6 +37,26 @@ browse_url2 <- function(...) {
     withr::local_options(list(vsc.browser = FALSE))
   }
   utils::browseURL(...)
+}
+
+#' Wait for shiny server to be up, then browse.
+#' @noRd
+#' @inheritDotParams base::browseURL
+browse_when_ready <- function(host, port) {
+  sb <- cli::cli_status(
+    "{cli::symbol$circle_dotted} Checking whether server is ready."
+  )
+  while (!pingr::is_up(destination = host, port = port)) {
+    cli::cli_status_update(
+      id = sb,
+      "{cli::symbol$arrow_right} Waiting for server to be ready."
+    )
+  }
+  suppressMessages(browse_url2(url = paste0("http://", host, ":", port)))
+  cli::cli_status_update(
+    id = sb,
+    "{cli::symbol$tick} Server is up."
+  )
 }
 
 #' Run shiny app in dev context and background
@@ -91,7 +110,7 @@ run_app_dev <- function(...) {
 greeting_app <- function() {
   shiny::shinyApp(
     ui = shiny::fluidPage(
-      shiny::textInput("name", "What's your names"),
+      shiny::textInput("name", "What's your name"),
       shiny::textOutput("greeting"),
       shiny::actionButton("reset", "Reset")
     ),
