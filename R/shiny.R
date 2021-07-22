@@ -87,7 +87,7 @@ run_app_dev <- function(...) {
   shiny::runApp(
     appDir = getOption("wama.default.app", default = "."),
     quiet = FALSE,
-    ... 
+    ...
   )
 }
 
