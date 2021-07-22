@@ -6,7 +6,6 @@ run_app_auto <- function(port = 8181,
                          host = getOption("shiny.host", "127.0.0.1"),
                         ...) {
   cli::cli_alert_info("Auto-updating enabled")
-  sb <- cli::cli_status("{cli::symbol$arrow_right} Launching auto-updating")
   rp <- run_app_dev_bg(port = port, host = host, ...)
   on.exit(rp$kill(), add = TRUE)
   # browse URL from within background processes does not work
@@ -14,12 +13,9 @@ run_app_auto <- function(port = 8181,
   testthat::watch(
     path = fs::dir_ls(recurse = TRUE),
     callback = function(added, deleted, modified) {
-      cli::cli_status_update(
-        id = sb,
-        "{cli::symbol$arrow_right} Update triggered"
-      )
-      # browse URL from within background processes does not work
+      cli::cli_alert_info("Changes detected")
       rp <<- run_app_dev_bg(rp = rp, port = port, ...)
+      # browse URL from within background processes does not work
       browse_when_ready(host = host, port = port)
       TRUE
     },
@@ -43,20 +39,15 @@ browse_url2 <- function(...) {
 #' @noRd
 #' @inheritDotParams base::browseURL
 browse_when_ready <- function(host, port) {
-  sb <- cli::cli_status(
-    "{cli::symbol$circle_dotted} Checking whether server is ready."
-  )
+  cli::cli_process_start("Waiting for server to accept queries")
+  sp <- cli::make_spinner()
   while (!pingr::is_up(destination = host, port = port)) {
-    cli::cli_status_update(
-      id = sb,
-      "{cli::symbol$arrow_right} Waiting for server to be ready."
-    )
+    sp$spin()
   }
+  sp$finish()
+  cli::cli_process_done()
+  cli::cli_process_start("Launching browser")
   suppressMessages(browse_url2(url = paste0("http://", host, ":", port)))
-  cli::cli_status_update(
-    id = sb,
-    "{cli::symbol$tick} Server is up."
-  )
 }
 
 #' Run shiny app in dev context and background
@@ -67,18 +58,12 @@ browse_when_ready <- function(host, port) {
 #' @noRd
 run_app_dev_bg <- function(rp = NULL,
                            ...) {
-  sb <- cli::cli_status("{cli::symbol$arrow_right} Starting update")
   if (!is.null(rp)) {
-    cli::cli_status_update(
-      id = sb,
-      "{cli::symbol$arrow_right} Shutting down prior background process"
-    )
+    cli::cli_process_start("Shutting down prior background process")
     rp$kill()
+    cli::cli_process_done()
   }
-  cli::cli_status_update(
-    id = sb,
-    "{cli::symbol$arrow_right} Starting new background process"
-  )
+  cli::cli_process_start("Starting new background process")
   callr::r_bg(
     func = function(app, ...) {
       options(cli.message_class = "callr_message")
@@ -95,13 +80,14 @@ run_app_dev_bg <- function(rp = NULL,
 #' @inheritDotParams shiny::runApp
 #' @noRd
 run_app_dev <- function(...) {
-  sb <- cli::cli_status("{cli::symbol$arrow_right} Loading package")
+  cli::cli_process_start(msg = "Loading package")
   pkgload::load_all(quiet = TRUE)
-  cli::cli_status_update(id = sb, "{cli::symbol$arrow_right} Launching app")
+  cli::cli_process_done()
+  cli::cli_process_start("Launching app")
   shiny::runApp(
     appDir = getOption("wama.default.app", default = "."),
     quiet = FALSE,
-    ...
+    ... 
   )
 }
 
