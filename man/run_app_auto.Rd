@@ -4,9 +4,14 @@
 \alias{run_app_auto}
 \title{Refresh shiny app automatically}
 \usage{
-run_app_auto(...)
+run_app_auto(port = 1818, ...)
 }
 \arguments{
+\item{port}{The TCP port that the application should listen on. If the
+\code{port} is not specified, and the \code{shiny.port} option is set (with
+\code{options(shiny.port = XX)}), then that port will be used. Otherwise,
+use a random port.}
+
 \item{...}{
   Arguments passed on to \code{\link[shiny:runApp]{shiny::runApp}}
   \describe{
@@ -20,10 +25,6 @@ expression that produces a Shiny app object.
 \item A list with \code{ui} and \code{server} components.
 \item A Shiny app object created by \code{\link[shiny:shinyApp]{shinyApp()}}.
 }}
-    \item{\code{port}}{The TCP port that the application should listen on. If the
-\code{port} is not specified, and the \code{shiny.port} option is set (with
-\code{options(shiny.port = XX)}), then that port will be used. Otherwise,
-use a random port.}
     \item{\code{launch.browser}}{If true, the system's default web browser will be
 launched automatically after the app is started. Defaults to true in
 interactive sessions only. This value of this parameter can also be a

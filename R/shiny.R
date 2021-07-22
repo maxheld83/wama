@@ -1,10 +1,16 @@
 #' Refresh shiny app automatically
+#' @inheritParams shiny::runApp
 #' @inheritDotParams shiny::runApp
 #' @export
-run_app_auto <- function(...) {
+run_app_auto <- function(port = 1818, ...) {
   cli::cli_alert_info("Auto-updating enabled")
   sb <- cli::cli_status("{cli::symbol$arrow_right} Launching auto-updating")
-  rp <- run_app_dev_bg(...)
+  rp <- run_app_dev_bg(port = port, ...)
+  # needs time to be ready
+  # hack-fix until https://github.com/maxheld83/wama/issues/7
+  Sys.sleep(2)
+  # browse URL from within background processes does not work
+  suppressMessages(browse_url2(url = paste0("http://localhost:", port)))
   on.exit(rp$kill(), add = TRUE)
   testthat::watch(
     path = fs::dir_ls(recurse = TRUE),
@@ -13,11 +19,25 @@ run_app_auto <- function(...) {
         id = sb,
         "{cli::symbol$arrow_right} Update triggered"
       )
-      rp <<- run_app_dev_bg(rp = rp, ...)
+      rp <<- run_app_dev_bg(rp = rp, port = port, ...)
+      Sys.sleep(2)
+      suppressMessages(browse_url2(url = paste0("http://localhost:", port)))
       TRUE
     },
     hash = TRUE
   )
+}
+
+#' Helper to overwrite vscode browseURL behavior
+#' @inheritDotParams base::browseURL
+#' @noRd
+browse_url2 <- function(...) {
+  # need to overwrite vscode here until
+  # https://github.com/maxheld83/wama/issues/6
+  if (Sys.getenv("TERM_PROGRAM") == "vscode") {
+    withr::local_options(list(vsc.browser = FALSE))
+  }
+  utils::browseURL(...)
 }
 
 #' Run shiny app in dev context and background
@@ -55,14 +75,13 @@ run_app_dev_bg <- function(rp = NULL,
 #' Run shiny app in dev context
 #' @inheritDotParams shiny::runApp
 #' @noRd
-run_app_dev <- function(quiet = FALSE, port = 1613, ...) {
+run_app_dev <- function(...) {
   sb <- cli::cli_status("{cli::symbol$arrow_right} Loading package")
   pkgload::load_all(quiet = TRUE)
   cli::cli_status_update(id = sb, "{cli::symbol$arrow_right} Launching app")
   shiny::runApp(
     appDir = getOption("wama.default.app", default = "."),
-    quiet = quiet,
-    port = port,
+    quiet = FALSE,
     ...
   )
 }
@@ -72,7 +91,7 @@ run_app_dev <- function(quiet = FALSE, port = 1613, ...) {
 greeting_app <- function() {
   shiny::shinyApp(
     ui = shiny::fluidPage(
-      shiny::textInput("name", "What's your name"),
+      shiny::textInput("name", "What's your names"),
       shiny::textOutput("greeting"),
       shiny::actionButton("reset", "Reset")
     ),
