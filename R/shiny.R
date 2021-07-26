@@ -32,7 +32,11 @@ browse_url2 <- function(...) {
   if (Sys.getenv("TERM_PROGRAM") == "vscode") {
     withr::local_options(list(vsc.browser = FALSE))
   }
-  utils::browseURL(...)
+  utils::browseURL(
+    ...,
+    # do not take focus on opening
+    browser = "/usr/bin/open -g"
+  )
 }
 
 #' Wait for shiny server to be up, then browse.
