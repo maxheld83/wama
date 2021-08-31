@@ -4,7 +4,7 @@
 #' @export
 run_app_auto <- function(port = 8181,
                          host = getOption("shiny.host", "127.0.0.1"),
-                        ...) {
+                         ...) {
   cli::cli_alert_info("Auto-updating enabled")
   rp <- run_app_dev_bg(port = port, host = host, ...)
   on.exit(rp$kill(), add = TRUE)
@@ -21,6 +21,34 @@ run_app_auto <- function(port = 8181,
     },
     hash = TRUE
   )
+}
+
+#' Find default shiny app
+#'
+#' Wama uses the first non-empty return of the below as your default shiny app:
+#'
+#' 1. The `Config/wama/defaultShinyApp` field of the `DESCRIPTION` in the working directory.
+#'
+#'    To set this for your package, add this to your `DESCRIPTION`:
+#'
+#'    ```
+#'    Config/wama/defaultShinyApp: myApp()
+#'    ```
+#'
+#' 1. The `wama.default.shiny.app` option.
+#'
+#'    This is best used interactively (`options(wama.default.app = myApp())`)
+#'    or set in your `.Rprofile`.
+#'
+#' @export
+find_default_app <- function() {
+  app <- desc::desc_get_field("Config/wama/defaultShinyApp", default = NULL)
+  if (!is.null(app)) {
+    app <- eval(rlang::parse_expr(app))
+  } else {
+    app <- getOption("wama.default.shiny.app", default = NULL)
+  }
+  app
 }
 
 #' Helper to overwrite vscode browseURL behavior
@@ -89,7 +117,7 @@ run_app_dev <- function(...) {
   cli::cli_process_done()
   cli::cli_process_start("Launching app")
   shiny::runApp(
-    appDir = getOption("wama.default.app", default = "."),
+    appDir = find_default_app(),
     quiet = FALSE,
     ...
   )
